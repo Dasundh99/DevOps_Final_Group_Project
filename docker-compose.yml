@@ -4,14 +4,14 @@ services:
   mongodb:
     build:
       context: ./mongodb
-      dockerfile: Dockerfile
+      dockerfile: DockerFile
     ports:
       - "27017:27017"
 
   backend:
     build:
       context: ./BACKEND
-      dockerfile: Dockerfile
+      dockerfile: DockerFile
     ports:
       - "5000:5000"
     depends_on:
@@ -20,6 +20,6 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: DockerFile
     ports:
       - "3000:3000"
