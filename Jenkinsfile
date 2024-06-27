@@ -5,7 +5,8 @@ pipeline {
         REPO_URL = 'https://github.com/Dasundh99/DevOps_Final_Group_Project.git'
         BACKEND_IMAGE = 'devops_project-backend'
         FRONTEND_IMAGE = 'devops_project-frontend'
-        MONGO_IMAGE = 'devops_project-mongodb'
+        BACKEND_PORT = '5000'
+        FRONTEND_PORT = '3000'
     }
 
     stages {
@@ -24,7 +25,18 @@ pipeline {
                 }
             }
         }
-        
+
+        stage('Free Up Ports') {
+            steps {
+                script {
+                    bat """
+                        for /f "tokens=5" %%a in ('netstat -aon ^| findstr :${BACKEND_PORT}') do taskkill /f /pid %%a
+                        for /f "tokens=5" %%a in ('netstat -aon ^| findstr :${FRONTEND_PORT}') do taskkill /f /pid %%a
+                    """
+                }
+            }
+        }
+
         stage('Build Backend Image') {
             steps {
                 script {
@@ -47,7 +59,6 @@ pipeline {
 
         stage('Run Containers') {
             steps {
-                bat "docker run -d --name mongodb ${MONGO_IMAGE}"
                 bat "docker run -d --name backend --link mongodb:mongodb -p 5000:5000 ${BACKEND_IMAGE}"
                 bat "docker run -d --name frontend --link backend:backend -p 3000:3000 ${FRONTEND_IMAGE}"
             }
