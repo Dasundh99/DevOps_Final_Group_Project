@@ -19,7 +19,6 @@ pipeline {
        stage('Cleanup Existing Containers') {
             steps {
                 script {
-                    bat 'docker rm -f mongodb || echo "mongodb container does not exist"'
                     bat 'docker rm -f backend || echo "backend container does not exist"'
                     bat 'docker rm -f frontend || echo "frontend container does not exist"'
                 }
