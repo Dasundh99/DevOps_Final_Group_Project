@@ -11,7 +11,7 @@ export default function Home() {
         <div className="image imageThree"></div>
         <div className="image imageFour"></div> */}
         <div className="discoverNext">
-          <h1>Explore the Gaming universe!</h1>
+          <h1>hi!</h1>
         </div>
 
         <div className="horizontalMove">
