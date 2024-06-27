@@ -59,7 +59,7 @@ pipeline {
             steps {
                 script {
                     dir('BACKEND') {
-                        bat "docker build -t ${BACKEND_IMAGE} ."
+                        bat "powershell -Command \"Start-Process -Verb runAs 'cmd.exe' -ArgumentList '/c docker build -t ${BACKEND_IMAGE} .'\""
                     }
                 }
             }
@@ -69,7 +69,7 @@ pipeline {
             steps {
                 script {
                     dir('frontend') {
-                        bat "docker build -t ${FRONTEND_IMAGE} ."
+                        bat "powershell -Command \"Start-Process -Verb runAs 'cmd.exe' -ArgumentList '/c docker build -t ${FRONTEND_IMAGE} .'\""
                     }
                 }
             }
