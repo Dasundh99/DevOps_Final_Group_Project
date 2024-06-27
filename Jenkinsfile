@@ -11,26 +11,33 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                checkout scm
+                git url: "${REPO_URL}"
             }
         }
 
         stage('Build Backend Image') {
             steps {
-                bat "cd BACKEND && docker build -t ${BACKEND_IMAGE} ."
+                script {
+                    dir('BACKEND') {
+                        bat "docker build -t ${BACKEND_IMAGE} ."
+                    }
+                }
             }
-
         }
 
         stage('Build Frontend Image') {
             steps {
-                bat "cd frontend && docker build -t ${FRONTEND_IMAGE} ."
+                script {
+                    dir('frontend') {
+                        bat "docker build -t ${FRONTEND_IMAGE} ."
+                    }
+                }
             }
         }
 
         stage('Run Containers') {
             steps {
-                bat "docker run -d --name mongodb devops_project-mongodb"
+                bat "docker run -d --name mongodb ${MONGO_IMAGE}"
                 bat "docker run -d --name backend --link mongodb:mongodb -p 5000:5000 ${BACKEND_IMAGE}"
                 bat "docker run -d --name frontend --link backend:backend -p 3000:3000 ${FRONTEND_IMAGE}"
             }
