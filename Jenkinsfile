@@ -41,12 +41,4 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            script {
-                docker ps -a
-            }
-        }
-    }
 }
