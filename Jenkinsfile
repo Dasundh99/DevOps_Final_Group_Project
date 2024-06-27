@@ -17,27 +17,22 @@ pipeline {
 
         stage('Build Backend Image') {
             steps {
-                script {
-                    docker.build("${BACKEND_IMAGE}", '-f BACKEND/DockerFile .')
-                }
+                bat "cd BACKEND && docker build -t ${BACKEND_IMAGE} ."
             }
+
         }
 
         stage('Build Frontend Image') {
             steps {
-                script {
-                    docker.build("${FRONTEND_IMAGE}", '-f frontend/DockerFile .')
-                }
+                bat "cd frontend && docker build -t ${FRONTEND_IMAGE} ."
             }
         }
 
         stage('Run Containers') {
             steps {
-                script {
-                    docker.run('-d --name mongodb devops_project-mongodb')
-                    docker.run("-d --name backend --link mongodb:mongodb -p 5000:5000 ${BACKEND_IMAGE}")
-                    docker.run("-d --name frontend --link backend:backend -p 3000:3000 ${FRONTEND_IMAGE}")
-                }
+                bat "docker run -d --name mongodb devops_project-mongodb"
+                bat "docker run -d --name backend --link mongodb:mongodb -p 5000:5000 ${BACKEND_IMAGE}"
+                bat "docker run -d --name frontend --link backend:backend -p 3000:3000 ${FRONTEND_IMAGE}"
             }
         }
     }
