@@ -26,12 +26,29 @@ pipeline {
             }
         }
 
+        
         stage('Free Up Ports') {
             steps {
                 script {
                     bat """
-                        for /f "tokens=5" %%a in ('netstat -aon ^| findstr :${BACKEND_PORT}') do taskkill /f /pid %%a
-                        for /f "tokens=5" %%a in ('netstat -aon ^| findstr :${FRONTEND_PORT}') do taskkill /f /pid %%a
+                        @echo off
+                        for /f "tokens=5" %%a in ('netstat -aon ^| findstr :${BACKEND_PORT}') do (
+                            taskkill /f /pid %%a 2>nul
+                            if errorlevel 1 (
+                                echo No process found on port ${BACKEND_PORT}
+                            ) else (
+                                echo Terminated process on port ${BACKEND_PORT}
+                            )
+                        )
+                        for /f "tokens=5" %%a in ('netstat -aon ^| findstr :${FRONTEND_PORT}') do (
+                            taskkill /f /pid %%a 2>nul
+                            if errorlevel 1 (
+                                echo No process found on port ${FRONTEND_PORT}
+                            ) else (
+                                echo Terminated process on port ${FRONTEND_PORT}
+                            )
+                        )
+                        exit /b 0
                     """
                 }
             }
