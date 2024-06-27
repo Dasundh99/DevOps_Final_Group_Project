@@ -19,9 +19,10 @@ pipeline {
         stage('Cleanup Existing Containers') {
             steps {
                 script {
-                    bat "powershell Start-Process -Verb runAs 'cmd.exe' -ArgumentList '/c docker rm -f backend || echo \"backend container does not exist\"'"
-                    bat "powershell Start-Process -Verb runAs 'cmd.exe' -ArgumentList '/c docker rm -f frontend || echo \"frontend container does not exist\"'"
-
+                    bat '''
+                        powershell -Command "Start-Process -Verb runAs 'cmd.exe' -ArgumentList '/c docker rm -f backend || echo \"backend container does not exist\"'"
+                        powershell -Command "Start-Process -Verb runAs 'cmd.exe' -ArgumentList '/c docker rm -f frontend || echo \"frontend container does not exist\"'"
+                    '''
                 }
             }
         }
